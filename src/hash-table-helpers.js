@@ -3,35 +3,55 @@ class LimitedArray {
   constructor(limit) {
     // You should not be directly accessing this array from your hash table methods
     // Use the getter and setter methods included in this class to manipulate data in this class
-    this.storage = [];
-    this.limit = limit;
+    this.head = null;
+    this.tail = null;
+    // Do not modify anything inside of the constructor
   }
-
-  checkLimit(index) {
-    if (typeof index !== 'number') throw new Error('The supplied index needs to be a number');
-    if (this.limit <= index) {
-      throw new Error('The supplied index lies out of the array\'s bounds');
+  // Wraps the given value in a node object and adds the node to the tail of the list
+  // If the list is empty, the new element is considered the tail as well as the head
+  // If there is one element in the list before the new element is added, the new element becomes the tail of the list
+  addToTail(value) {
+    const newNode = {
+      value,
+      next: null,
+    };
+    if (this.tail === null) {
+      this.tail = newNode;
+      this.head = newNode;
+      return;
     }
+    const holder = this.tail;
+    holder.next = newNode;
+    this.tail = newNode;
   }
-
-  each(cb) {
-    for (let i = 0; i < this.storage.length; i++) {
-      cb(this.storage[i], i);
+  // Removes the current head node from the list, replacing it with the next element in the list
+  // Returns the value of the removed node
+  removeHead() {
+    if (this.head === null) {
+      return null;
     }
-  }
-  // Use this getter function to fetch elements from this class
-  get(index) {
-    this.checkLimit(index);
-    return this.storage[index];
-  }
+    // find head, set new value of head to old head's next.
+    const oldHead = this.head;
+    this.head = oldHead.next;
 
-  get length() {
-    return this.storage.length;
+    // check to see if node removed was the last node
+    // if it is, set value of tail to null.
+    if (oldHead.next === null) {
+      this.tail = null;
+    }
+    return oldHead.value;
   }
-  // Use this setter function to add elements to this class
-  set(index, value) {
-    this.checkLimit(index);
-    this.storage[index] = value;
+  // Checks the linked list for the given value
+  // Returns true if the the value is found in the list, false otherwise
+  contains(value) {
+    let node = this.head;
+    while (node !== null) {
+      if (value === node.value) {
+        return true;
+      }
+      node = node.next;
+    }
+    return false;
   }
 }
 /* eslint-disable no-bitwise, operator-assignment */
