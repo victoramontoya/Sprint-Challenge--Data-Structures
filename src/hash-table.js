@@ -1,20 +1,22 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable class-methods-use-this */
-const { LimitedArray, getIndexBelowMax } = require('./hash-table-helpers');
+const { LimitedArray, getIndexBelowMax, LinkedList } = require('./hash-table-helpers');
 
 class HashTable {
   constructor(limit = 8) {
     this.limit = limit;
-    this.storage = new LimitedArray(this.limit);
+    this.storage = new LinkedList(this.limit);
     // Do not modify anything inside of the constructor
   }
 
   resize() {
     this.limit *= 2;
     const oldStorage = this.storage;
-    this.storage = new LimitedArray(this.limit);
+    this.storage = new LinkedList(this.limit);
     oldStorage.each((bucket) => {
       if (!bucket) return;
+      //bucket.each(node) => {      };
+      // this.insert(node.getKey(), node.getValue());
       bucket.forEach((pair) => {
         this.insert(pair[0], pair[1]);
       });
@@ -24,6 +26,7 @@ class HashTable {
   capacityIsFull() {
     let fullCells = 0;
     this.storage.each((bucket) => {
+      // if (bucket) fullCells++;
       if (bucket !== undefined) fullCells++;
     });
     return fullCells / this.limit >= 0.75;
@@ -36,8 +39,11 @@ class HashTable {
   insert(key, value) {
     if (this.capacityIsFull()) this.resize();
     const index = getIndexBelowMax(key.toString(), this.limit);
+    // const bucket = this.storage.get(index) || newBucketLList();
     let bucket = this.storage.get(index) || [];
 
+
+// bucket.insert(key, value);
     bucket = bucket.filter(item => item[0] !== key);
     bucket.push([key, value]);
     this.storage.set(index, bucket);
@@ -48,7 +54,7 @@ class HashTable {
   remove(key) {
     const index = getIndexBelowMax(key.toString(), this.limit);
     let bucket = this.storage.get(index);
-
+// bucket.remove(key)
     if (bucket) {
       bucket = bucket.filter(item => item[0] !== key);
       this.storage.set(index, bucket);
@@ -60,7 +66,10 @@ class HashTable {
   retrieve(key) {
     const index = getIndexBelowMax(key.toString(), this.limit);
     const bucket = this.storage.get(index);
+    // const bucket = this.storage.get(index) || new BucketLList();
     let retrieved;
+    // const found = bucket.find(key);
+    // if (found) return found.node.getValue();
     if (bucket) {
       retrieved = bucket.filter(item => item[0] === key)[0];
     }

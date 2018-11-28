@@ -34,9 +34,11 @@ class LimitedArray {
     this.storage[index] = value;
   }
 }
+
 class LinkedList {
-  constructor() {
-    this.head = null;
+  constructor(key, value) {
+    this.key = key;
+    this.value = value;
     this.tail = null;
     // Do not modify anything inside of the constructor
   }
@@ -50,7 +52,7 @@ class LinkedList {
     };
     if (this.tail === null) {
       this.tail = newNode;
-      this.head = newNode;
+      this.value = newNode;
       return;
     }
     const holder = this.tail;
@@ -60,12 +62,12 @@ class LinkedList {
   // Removes the current head node from the list, replacing it with the next element in the list
   // Returns the value of the removed node
   removeHead() {
-    if (this.head === null) {
+    if (this.value === null) {
       return null;
     }
     // find head, set new value of head to old head's next.
-    const oldHead = this.head;
-    this.head = oldHead.next;
+    const oldHead = this.value;
+    this.value = oldHead.next;
 
     // check to see if node removed was the last node
     // if it is, set value of tail to null.
@@ -77,7 +79,7 @@ class LinkedList {
   // Checks the linked list for the given value
   // Returns true if the the value is found in the list, false otherwise
   contains(value) {
-    let node = this.head;
+    let node = this.value;
     while (node !== null) {
       if (value === node.value) {
         return true;
